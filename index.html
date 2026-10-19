@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mensaje desde el Cielo</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;600&family=Great+Vibes&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Typography */
+        .font-cinzel { font-family: 'Cinzel Decorative', serif; }
+        .font-playfair { font-family: 'Playfair Display', serif; }
+        .font-sans-modern { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-cursive { font-family: 'Great Vibes', cursive; }
+
+        /* Modern Glassmorphism & Background Ambient */
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(254, 240, 138, 0.2);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Modern Golden Wax Seal */
+        .wax-seal-modern {
+            background: radial-gradient(circle at 35% 35%, #fef08a, #d97706 65%, #78350f);
+            box-shadow: 
+                0 10px 30px rgba(217, 119, 6, 0.4),
+                inset 0 2px 4px rgba(255, 255, 255, 0.9),
+                inset 0 -3px 6px rgba(0, 0, 0, 0.4);
+            border: 1.5px solid rgba(254, 240, 138, 0.6);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .wax-seal-modern:hover {
+            transform: scale(1.08) rotate(4deg);
+            box-shadow: 
+                0 15px 35px rgba(253, 224, 71, 0.6),
+                inset 0 2px 4px rgba(255, 255, 255, 1),
+                inset 0 -3px 6px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Modern Ribbons */
+        .ribbon-v {
+            background: linear-gradient(90deg, rgba(180, 83, 9, 0.8) 0%, rgba(245, 158, 11, 0.9) 40%, rgba(254, 240, 138, 1) 50%, rgba(245, 158, 11, 0.9) 60%, rgba(180, 83, 9, 0.8) 100%);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .ribbon-h {
+            background: linear-gradient(180deg, rgba(180, 83, 9, 0.8) 0%, rgba(245, 158, 11, 0.9) 40%, rgba(254, 240, 138, 1) 50%, rgba(245, 158, 11, 0.9) 60%, rgba(180, 83, 9, 0.8) 100%);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Candle Glow */
+        @keyframes subtlePulse {
+            0%, 100% { transform: scale(1); opacity: 0.9; filter: drop-shadow(0 0 15px rgba(253, 224, 71, 0.6)); }
+            50% { transform: scale(1.06); opacity: 1; filter: drop-shadow(0 0 25px rgba(254, 240, 138, 0.9)); }
+        }
+        .candle-flame {
+            animation: subtlePulse 3s infinite ease-in-out;
+        }
+
+        /* 3D Envelope System */
+        .envelope-container {
+            perspective: 1200px;
+        }
+
+        .flap-top {
+            transform-origin: top center;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 30;
+        }
+        .flap-top.open { transform: rotateX(180deg); z-index: 5; }
+
+        .flap-bottom {
+            transform-origin: bottom center;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 25;
+        }
+        .flap-bottom.open { transform: rotateX(-180deg); z-index: 5; }
+
+        .flap-left {
+            transform-origin: left center;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 20;
+        }
+        .flap-left.open { transform: rotateY(-180deg); z-index: 5; }
+
+        .flap-right {
+            transform-origin: right center;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 20;
+        }
+        .flap-right.open { transform: rotateY(180deg); z-index: 5; }
+
+        .letter-paper {
+            transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.7s ease, box-shadow 0.7s ease;
+        }
+
+        .clip-top { clip-path: polygon(0 0, 100% 0, 50% 100%); }
+        .clip-bottom { clip-path: polygon(0 100%, 50% 0, 100% 100%); }
+        .clip-left { clip-path: polygon(0 0, 100% 50%, 0 100%); }
+        .clip-right { clip-path: polygon(100% 0, 0 50%, 100% 100%); }
+
+        /* Custom Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar { width: 5px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(217, 119, 6, 0.05); }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(217, 119, 6, 0.3); border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(217, 119, 6, 0.5); }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-950 via-sky-950 to-slate-900 min-h-screen text-amber-100 flex flex-col justify-between overflow-x-hidden font-sans-modern select-none relative">
+
+    <!-- Ambient Celestial Particles Canvas -->
+    <canvas id="sparksCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-80"></canvas>
+
+    <!-- Overlay Backdrop for Letter Reading -->
+    <div id="bgFocusOverlay" class="fixed inset-0 bg-slate-950/70 backdrop-blur-md pointer-events-none opacity-0 transition-opacity duration-1000 z-10"></div>
+
+    <!-- Minimalist Header Bar -->
+    <header class="relative z-20 flex justify-between items-center px-6 py-5 max-w-6xl mx-auto w-full">
+        <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-full bg-amber-400/10 border border-amber-300/30 flex items-center justify-center shadow-lg">
+                <i class="fa-solid fa-cross text-amber-300 text-sm"></i>
+            </div>
+            <h1 class="font-cinzel text-base md:text-lg tracking-wider text-amber-200/90 font-bold">
+                Mensaje desde el Cielo
+            </h1>
+        </div>
+
+        <!-- Audio Control Toggle -->
+        <button id="audioBtn" class="flex items-center gap-2.5 px-4 py-2 bg-slate-900/60 hover:bg-slate-800/80 border border-amber-300/30 rounded-full text-xs text-amber-100 backdrop-blur-md transition shadow-md hover:shadow-amber-300/10 active:scale-95">
+            <i id="audioIcon" class="fa-solid fa-volume-xmark text-amber-300"></i>
+            <span id="audioText" class="font-sans-modern font-medium">Reproducir Canción</span>
+        </button>
+    </header>
+
+    <!-- Side Candles -->
+    <div class="fixed left-4 md:left-12 bottom-12 z-20 flex flex-col items-center pointer-events-none opacity-80">
+        <div class="w-3.5 h-5 md:w-4 md:h-7 bg-gradient-to-t from-amber-200 via-amber-100 to-white rounded-full candle-flame mb-1"></div>
+        <div class="w-1 h-2 bg-amber-900/60 rounded-t-sm"></div>
+        <div class="w-6 md:w-8 h-24 md:h-36 bg-gradient-to-r from-slate-100 via-white to-slate-200 rounded-t-md shadow-2xl relative border-l border-white/60">
+            <div class="absolute top-3 left-0 right-0 h-6 bg-amber-200/20 rounded-full blur-xs"></div>
+        </div>
+    </div>
+
+    <div class="fixed right-4 md:right-12 bottom-12 z-20 flex flex-col items-center pointer-events-none opacity-80">
+        <div class="w-3.5 h-5 md:w-4 md:h-7 bg-gradient-to-t from-amber-200 via-amber-100 to-white rounded-full candle-flame mb-1" style="animation-delay: -1.5s;"></div>
+        <div class="w-1 h-2 bg-amber-900/60 rounded-t-sm"></div>
+        <div class="w-6 md:w-8 h-32 md:h-44 bg-gradient-to-r from-slate-100 via-white to-slate-200 rounded-t-md shadow-2xl relative border-r border-white/60">
+            <div class="absolute top-4 left-0 right-0 h-5 bg-amber-200/20 rounded-full blur-xs"></div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <main class="relative z-20 flex-1 flex items-center justify-center p-4 my-auto">
+        <div class="relative w-full max-w-xl flex flex-col items-center justify-center min-h-[460px]">
+
+            <!-- Guidance Message -->
+            <p id="instructionText" class="font-sans-modern text-xs md:text-sm text-amber-200/80 mb-6 text-center tracking-widest uppercase transition-opacity duration-500 flex items-center gap-2">
+                <i class="fa-solid fa-sparkles text-amber-300"></i> Presiona el sello para abrir el mensaje
+            </p>
+
+            <!-- 3D Modern Envelope -->
+            <div id="envelope" class="envelope-container relative w-full max-w-md md:max-w-lg aspect-[1.5/1] glass-panel rounded-2xl flex items-center justify-center transition-all duration-700">
+                
+                <!-- Inner Lining -->
+                <div class="absolute inset-0 bg-slate-900/90 rounded-2xl overflow-hidden">
+                    <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fef08a_1px,transparent_1px)] [background-size:24px_24px]"></div>
+                </div>
+
+                <!-- Inner Letter Card -->
+                <div id="letterPaper" class="letter-paper absolute inset-3 md:inset-4 glass-card rounded-xl p-6 md:p-8 text-slate-800 z-15 opacity-0 transform scale-95 pointer-events-none flex flex-col justify-between border border-amber-200/60 custom-scrollbar overflow-y-auto max-h-[75vh] md:max-h-[80vh]">
+                    
+                    <!-- Header -->
+                    <div class="text-center mb-4 pb-3 border-b border-amber-900/10">
+                        <h2 id="letterTitle" class="font-playfair text-2xl md:text-3xl text-slate-900 font-semibold tracking-wide">
+                            Enviado desde el Cielo
+                        </h2>
+                    </div>
+
+                    <!-- Photo Holder -->
+                    <div class="flex flex-col items-center my-3 relative">
+                        <div class="p-1.5 bg-white rounded-xl shadow-xl border border-amber-200/60 relative group">
+                            <img id="letterImage" src="https://images.unsplash.com/photo-1519817650390-64a93db51149?auto=format&fit=crop&w=400&q=80" alt="Recuerdo" class="w-32 h-32 md:w-36 md:h-36 object-cover rounded-lg">
+                            <label for="imageUpload" class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 rounded-lg transition duration-300 flex items-center justify-center text-white text-xs font-medium cursor-pointer gap-1.5">
+                                <i class="fa-solid fa-camera"></i> Cambiar
+                            </label>
+                        </div>
+                        <input type="file" id="imageUpload" accept="image/*" class="hidden">
+                    </div>
+
+                    <!-- Message Body -->
+                    <div class="my-3 text-center px-2">
+                        <p id="letterBody" class="font-playfair text-base md:text-lg leading-relaxed text-slate-700 italic">
+                            "No te entristezcas, porque me encuentro descansando en los brazos de Nuestro Señor. Aquí solo hay luz, gozo y una paz infinita. Sigue caminando en la fe, sonríe y guarda mi recuerdo con amor. Nos volveremos a abrazar en la gloria eterna."
+                        </p>
+                    </div>
+
+                    <!-- Signature -->
+                    <div class="mt-4 text-right border-t border-amber-900/10 pt-3">
+                        <p id="letterSignature" class="font-cursive text-2xl md:text-3xl text-amber-900">
+                            Con todo mi amor desde el cielo
+                        </p>
+                    </div>
+
+                    <!-- Interactive Actions -->
+                    <div class="mt-6 flex flex-wrap justify-center gap-3 pt-3">
+                        <button id="editBtn" class="px-4 py-2 bg-slate-900 text-amber-200 rounded-full text-xs font-sans-modern font-medium hover:bg-slate-800 transition shadow-md flex items-center gap-1.5">
+                            <i class="fa-solid fa-pen-to-square"></i> Editar Mensaje
+                        </button>
+                        <button id="closeLetterBtn" class="px-4 py-2 bg-amber-500/20 text-amber-900 border border-amber-500/30 rounded-full text-xs font-sans-modern font-semibold hover:bg-amber-500/30 transition shadow-sm flex items-center gap-1.5">
+                            <i class="fa-solid fa-envelope text-amber-700"></i> Cerrar y Guardar Sobre
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Ribbons -->
+                <div id="ribbonV" class="ribbon-v absolute inset-y-0 w-8 left-1/2 transform -translate-x-1/2 z-35 pointer-events-none"></div>
+                <div id="ribbonH" class="ribbon-h absolute inset-x-0 h-8 top-1/2 transform -translate-y-1/2 z-35 pointer-events-none"></div>
+
+                <!-- Foldable Flaps -->
+                <div id="flapTop" class="flap-top absolute top-0 inset-x-0 h-1/2 bg-slate-900/90 rounded-t-2xl border-b border-amber-300/20">
+                    <div class="w-full h-full bg-gradient-to-b from-slate-900 to-slate-950 clip-top"></div>
+                </div>
+
+                <div id="flapBottom" class="flap-bottom absolute bottom-0 inset-x-0 h-1/2 bg-slate-900/90 rounded-b-2xl border-t border-amber-300/20">
+                    <div class="w-full h-full bg-gradient-to-t from-slate-900 to-slate-950 clip-bottom"></div>
+                </div>
+
+                <div id="flapLeft" class="flap-left absolute left-0 inset-y-0 w-1/2 bg-slate-900/90 rounded-l-2xl border-r border-amber-300/20">
+                    <div class="w-full h-full bg-gradient-to-r from-slate-900 to-slate-950 clip-left"></div>
+                </div>
+
+                <div id="flapRight" class="flap-right absolute right-0 inset-y-0 w-1/2 bg-slate-900/90 rounded-r-2xl border-l border-amber-300/20">
+                    <div class="w-full h-full bg-gradient-to-l from-slate-900 to-slate-950 clip-right"></div>
+                </div>
+
+                <!-- Modern Wax Seal Button -->
+                <button id="waxSealBtn" class="wax-seal-modern absolute z-40 w-16 h-16 md:w-20 md:h-20 rounded-full flex flex-col items-center justify-center cursor-pointer transform active:scale-90">
+                    <div id="sealIconGroup" class="text-amber-950 text-xl md:text-2xl flex flex-col items-center">
+                        <i class="fa-solid fa-cross"></i>
+                        <span class="font-sans-modern text-[8px] font-bold tracking-widest text-amber-950/90 mt-0.5 uppercase">Abrir</span>
+                    </div>
+                </button>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Customization Modal -->
+    <div id="editModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-amber-300/30 rounded-2xl max-w-lg w-full p-6 text-amber-100 shadow-2xl space-y-4">
+            <h3 class="font-playfair text-xl text-amber-200 border-b border-slate-800 pb-3 flex items-center gap-2">
+                <i class="fa-solid fa-feather text-amber-300"></i> Personalizar el Mensaje
+            </h3>
+            
+            <div class="space-y-1">
+                <label class="block text-xs font-sans-modern text-amber-200/70">Título de la Carta</label>
+                <input type="text" id="inputTitle" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-sm text-amber-100 focus:outline-none focus:border-amber-300/60">
+            </div>
+
+            <div class="space-y-1">
+                <label class="block text-xs font-sans-modern text-amber-200/70">Cuerpo del Mensaje</label>
+                <textarea id="inputBody" rows="4" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-sm text-amber-100 focus:outline-none focus:border-amber-300/60"></textarea>
+            </div>
+
+            <div class="space-y-1">
+                <label class="block text-xs font-sans-modern text-amber-200/70">Firma / Despedida</label>
+                <input type="text" id="inputSignature" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-sm text-amber-100 focus:outline-none focus:border-amber-300/60">
+            </div>
+
+            <div class="flex justify-end gap-3 pt-3 border-t border-slate-800">
+                <button id="cancelEditBtn" class="px-4 py-2 bg-slate-800 text-xs rounded-full hover:bg-slate-700 transition">Cancelar</button>
+                <button id="saveEditBtn" class="px-5 py-2 bg-amber-400 text-slate-950 text-xs font-semibold rounded-full hover:bg-amber-300 transition">Guardar Cambios</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="relative z-20 text-center py-4 text-xs font-sans-modern text-amber-200/50 tracking-wider flex items-center justify-center gap-2">
+        <i class="fa-solid fa-dove text-amber-300/70"></i> Mensaje desde el Cielo
+    </footer>
+
+    <!-- Audio para GitHub Pages (guarda tu archivo dentro de la carpeta audio/cancion.mp3) -->
+    <audio id="bgMusic" src="cancion.mp3" preload="auto" loop></audio>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Canvas Particles
+        const canvas = document.getElementById('sparksCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const sparks = [];
+        const sparkColors = ['rgba(254, 240, 138, 0.8)', 'rgba(255, 255, 255, 0.9)', 'rgba(186, 230, 253, 0.7)'];
+
+        class Spark {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedY = -(Math.random() * 0.4 + 0.1);
+                this.speedX = Math.random() * 0.4 - 0.2;
+                this.color = sparkColors[Math.floor(Math.random() * sparkColors.length)];
+                this.opacity = Math.random() * 0.6 + 0.2;
+                this.fade = Math.random() * 0.005 + 0.002;
+            }
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                this.opacity -= this.fade;
+                if (this.y < -10 || this.opacity <= 0) {
+                    this.reset();
+                    this.y = canvas.height + 10;
+                }
+            }
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = Math.max(0, this.opacity);
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        for (let i = 0; i < 40; i++) { sparks.push(new Spark()); }
+
+        function animateSparks() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            sparks.forEach(s => { s.update(); s.draw(); });
+            requestAnimationFrame(animateSparks);
+        }
+        animateSparks();
+
+        // Control de Música Personalizada
+        const bgMusic = document.getElementById('bgMusic');
+        const audioBtn = document.getElementById('audioBtn');
+        const audioIcon = document.getElementById('audioIcon');
+        const audioText = document.getElementById('audioText');
+
+        audioBtn.addEventListener('click', () => {
+            if (bgMusic.paused) {
+                bgMusic.play().then(() => {
+                    audioIcon.className = 'fa-solid fa-volume-high text-amber-300 animate-pulse';
+                    audioText.textContent = 'Pausar Canción';
+                }).catch(error => {
+                    console.log("Error al reproducir audio:", error);
+                });
+            } else {
+                bgMusic.pause();
+                audioIcon.className = 'fa-solid fa-volume-xmark text-amber-300';
+                audioText.textContent = 'Reproducir Canción';
+            }
+        });
+
+        // Envelope Unfold & Fold Actions
+        const waxSealBtn = document.getElementById('waxSealBtn');
+        const ribbonV = document.getElementById('ribbonV');
+        const ribbonH = document.getElementById('ribbonH');
+        const flapTop = document.getElementById('flapTop');
+        const flapBottom = document.getElementById('flapBottom');
+        const flapLeft = document.getElementById('flapLeft');
+        const flapRight = document.getElementById('flapRight');
+        const letterPaper = document.getElementById('letterPaper');
+        const envelope = document.getElementById('envelope');
+        const instructionText = document.getElementById('instructionText');
+        const closeLetterBtn = document.getElementById('closeLetterBtn');
+        const bgFocusOverlay = document.getElementById('bgFocusOverlay');
+
+        let isEnvelopeOpen = false;
+
+        waxSealBtn.addEventListener('click', () => {
+            if (isEnvelopeOpen) return;
+            isEnvelopeOpen = true;
+
+            waxSealBtn.style.transform = 'scale(1.4) rotate(15deg)';
+            waxSealBtn.style.opacity = '0';
+            waxSealBtn.style.pointerEvents = 'none';
+
+            ribbonV.style.opacity = '0';
+            ribbonH.style.opacity = '0';
+
+            instructionText.style.opacity = '0';
+
+            setTimeout(() => { flapTop.classList.add('open'); }, 250);
+            setTimeout(() => { 
+                flapLeft.classList.add('open'); 
+                flapRight.classList.add('open'); 
+            }, 500);
+            setTimeout(() => { flapBottom.classList.add('open'); }, 700);
+
+            setTimeout(() => {
+                bgFocusOverlay.classList.remove('opacity-0', 'pointer-events-none');
+                bgFocusOverlay.classList.add('opacity-100');
+
+                letterPaper.classList.remove('opacity-0', 'pointer-events-none', 'scale-95');
+                letterPaper.classList.add('opacity-100', 'pointer-events-auto', 'scale-100', 'z-40');
+            }, 1000);
+        });
+
+        // Re-close Envelope
+        closeLetterBtn.addEventListener('click', () => {
+            if (!isEnvelopeOpen) return;
+            isEnvelopeOpen = false;
+
+            bgFocusOverlay.classList.remove('opacity-100');
+            bgFocusOverlay.classList.add('opacity-0', 'pointer-events-none');
+
+            letterPaper.classList.remove('opacity-100', 'pointer-events-auto', 'scale-100', 'z-40');
+            letterPaper.classList.add('opacity-0', 'pointer-events-none', 'scale-95');
+
+            setTimeout(() => { flapBottom.classList.remove('open'); }, 300);
+            setTimeout(() => { 
+                flapLeft.classList.remove('open'); 
+                flapRight.classList.remove('open'); 
+            }, 500);
+            setTimeout(() => { flapTop.classList.remove('open'); }, 700);
+
+            setTimeout(() => {
+                waxSealBtn.style.transform = 'scale(1) rotate(0deg)';
+                waxSealBtn.style.opacity = '1';
+                waxSealBtn.style.pointerEvents = 'auto';
+
+                ribbonV.style.opacity = '1';
+                ribbonH.style.opacity = '1';
+
+                instructionText.style.opacity = '1';
+            }, 1100);
+        });
+
+        // Photo Upload
+        const imageUpload = document.getElementById('imageUpload');
+        const letterImage = document.getElementById('letterImage');
+
+        imageUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    letterImage.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Edit Modal Logic
+        const editBtn = document.getElementById('editBtn');
+        const editModal = document.getElementById('editModal');
+        const cancelEditBtn = document.getElementById('cancelEditBtn');
+        const saveEditBtn = document.getElementById('saveEditBtn');
+
+        const letterTitle = document.getElementById('letterTitle');
+        const letterBody = document.getElementById('letterBody');
+        const letterSignature = document.getElementById('letterSignature');
+
+        const inputTitle = document.getElementById('inputTitle');
+        const inputBody = document.getElementById('inputBody');
+        const inputSignature = document.getElementById('inputSignature');
+
+        editBtn.addEventListener('click', () => {
+            inputTitle.value = letterTitle.textContent.trim();
+            inputBody.value = letterBody.textContent.trim().replace(/^"|"$/g, '');
+            inputSignature.value = letterSignature.textContent.trim();
+            editModal.classList.remove('hidden');
+        });
+
+        cancelEditBtn.addEventListener('click', () => {
+            editModal.classList.add('hidden');
+        });
+
+        saveEditBtn.addEventListener('click', () => {
+            letterTitle.textContent = inputTitle.value.trim() || 'Enviado desde el Cielo';
+            letterBody.textContent = `"${inputBody.value.trim()}"`;
+            letterSignature.textContent = inputSignature.value.trim() || 'Con todo mi amor desde el cielo';
+            editModal.classList.add('hidden');
+        });
+    </script>
+</body>
+</html>
