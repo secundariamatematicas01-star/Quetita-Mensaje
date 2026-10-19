@@ -188,21 +188,29 @@
                 <div id="letterPaper" class="letter-paper absolute inset-3 md:inset-4 glass-card rounded-xl p-6 md:p-8 text-slate-800 z-15 opacity-0 transform scale-95 pointer-events-none flex flex-col justify-between border border-amber-200/60 custom-scrollbar overflow-y-auto max-h-[75vh] md:max-h-[80vh]">
                     
                     <!-- Header -->
-                    <div class="text-center mb-4 pb-3 border-b border-amber-900/10">
+                    <div class="text-center mb-3 pb-2 border-b border-amber-900/10">
                         <h2 id="letterTitle" class="font-playfair text-2xl md:text-3xl text-slate-900 font-semibold tracking-wide">
                             Enviado desde el Cielo
                         </h2>
                     </div>
 
-                    <!-- Photo Holder -->
-                    <div class="flex flex-col items-center my-3 relative">
-                        <div class="p-1.5 bg-white rounded-xl shadow-xl border border-amber-200/60 relative group">
-                            <img id="letterImage" src="https://images.unsplash.com/photo-1519817650390-64a93db51149?auto=format&fit=crop&w=400&q=80" alt="Recuerdo" class="w-32 h-32 md:w-36 md:h-36 object-cover rounded-lg">
-                            <label for="imageUpload" class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 rounded-lg transition duration-300 flex items-center justify-center text-white text-xs font-medium cursor-pointer gap-1.5">
-                                <i class="fa-solid fa-camera"></i> Cambiar
-                            </label>
+                    <!-- Photo Carousel Container -->
+                    <div class="flex flex-col items-center my-2 relative">
+                        <div class="p-1.5 bg-white rounded-xl shadow-xl border border-amber-200/60 relative group w-36 h-36 md:w-40 md:h-40 overflow-hidden flex items-center justify-center">
+                            <!-- Display Image -->
+                            <img id="carouselImage" src="" alt="Recuerdo Celestial" class="w-full h-full object-cover rounded-lg transition-all duration-500">
+                            
+                            <!-- Carousel Navigation Arrows -->
+                            <button id="prevPhotoBtn" class="absolute left-1 top-1/2 -translate-y-1/2 bg-slate-900/70 hover:bg-slate-900 text-amber-200 rounded-full w-7 h-7 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition shadow-md">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </button>
+                            <button id="nextPhotoBtn" class="absolute right-1 top-1/2 -translate-y-1/2 bg-slate-900/70 hover:bg-slate-900 text-amber-200 rounded-full w-7 h-7 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition shadow-md">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </button>
                         </div>
-                        <input type="file" id="imageUpload" accept="image/*" class="hidden">
+
+                        <!-- Carousel Dots Indicators -->
+                        <div id="carouselDots" class="flex items-center gap-1.5 mt-2"></div>
                     </div>
 
                     <!-- Message Body -->
@@ -213,18 +221,15 @@
                     </div>
 
                     <!-- Signature -->
-                    <div class="mt-4 text-right border-t border-amber-900/10 pt-3">
+                    <div class="mt-3 text-right border-t border-amber-900/10 pt-2">
                         <p id="letterSignature" class="font-cursive text-2xl md:text-3xl text-amber-900">
                             Con todo mi amor desde el cielo
                         </p>
                     </div>
 
-                    <!-- Interactive Actions -->
-                    <div class="mt-6 flex flex-wrap justify-center gap-3 pt-3">
-                        <button id="editBtn" class="px-4 py-2 bg-slate-900 text-amber-200 rounded-full text-xs font-sans-modern font-medium hover:bg-slate-800 transition shadow-md flex items-center gap-1.5">
-                            <i class="fa-solid fa-pen-to-square"></i> Editar Mensaje
-                        </button>
-                        <button id="closeLetterBtn" class="px-4 py-2 bg-amber-500/20 text-amber-900 border border-amber-500/30 rounded-full text-xs font-sans-modern font-semibold hover:bg-amber-500/30 transition shadow-sm flex items-center gap-1.5">
+                    <!-- Interactive Action (Only Close) -->
+                    <div class="mt-5 flex justify-center pt-3 border-t border-amber-900/10">
+                        <button id="closeLetterBtn" class="px-5 py-2 bg-amber-500/20 text-amber-900 border border-amber-500/30 rounded-full text-xs font-sans-modern font-semibold hover:bg-amber-500/30 transition shadow-sm flex items-center gap-1.5">
                             <i class="fa-solid fa-envelope text-amber-700"></i> Cerrar y Guardar Sobre
                         </button>
                     </div>
@@ -263,41 +268,12 @@
         </div>
     </main>
 
-    <!-- Customization Modal -->
-    <div id="editModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-slate-900 border border-amber-300/30 rounded-2xl max-w-lg w-full p-6 text-amber-100 shadow-2xl space-y-4">
-            <h3 class="font-playfair text-xl text-amber-200 border-b border-slate-800 pb-3 flex items-center gap-2">
-                <i class="fa-solid fa-feather text-amber-300"></i> Personalizar el Mensaje
-            </h3>
-            
-            <div class="space-y-1">
-                <label class="block text-xs font-sans-modern text-amber-200/70">Título de la Carta</label>
-                <input type="text" id="inputTitle" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-sm text-amber-100 focus:outline-none focus:border-amber-300/60">
-            </div>
-
-            <div class="space-y-1">
-                <label class="block text-xs font-sans-modern text-amber-200/70">Cuerpo del Mensaje</label>
-                <textarea id="inputBody" rows="4" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-sm text-amber-100 focus:outline-none focus:border-amber-300/60"></textarea>
-            </div>
-
-            <div class="space-y-1">
-                <label class="block text-xs font-sans-modern text-amber-200/70">Firma / Despedida</label>
-                <input type="text" id="inputSignature" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-sm text-amber-100 focus:outline-none focus:border-amber-300/60">
-            </div>
-
-            <div class="flex justify-end gap-3 pt-3 border-t border-slate-800">
-                <button id="cancelEditBtn" class="px-4 py-2 bg-slate-800 text-xs rounded-full hover:bg-slate-700 transition">Cancelar</button>
-                <button id="saveEditBtn" class="px-5 py-2 bg-amber-400 text-slate-950 text-xs font-semibold rounded-full hover:bg-amber-300 transition">Guardar Cambios</button>
-            </div>
-        </div>
-    </div>
-
     <!-- Footer -->
     <footer class="relative z-20 text-center py-4 text-xs font-sans-modern text-amber-200/50 tracking-wider flex items-center justify-center gap-2">
         <i class="fa-solid fa-dove text-amber-300/70"></i> Mensaje desde el Cielo
     </footer>
 
-    <!-- Audio directo en la raíz de tu proyecto GitHub -->
+    <!-- Audio para GitHub Pages -->
     <audio id="bgMusic" src="cancion.mp3" preload="auto" loop></audio>
 
     <!-- JavaScript Logic -->
@@ -378,6 +354,61 @@
             }
         });
 
+        // --- LISTA FIJA DE FOTOS ---
+        // Cambia estos nombres por las fotos que subas a tu repositorio en GitHub
+        let photoList = [
+            "foto1.jpg",
+            "foto2.jpg",
+            "foto3.jpg"
+        ];
+        let currentPhotoIndex = 0;
+
+        const carouselImage = document.getElementById('carouselImage');
+        const carouselDots = document.getElementById('carouselDots');
+        const prevPhotoBtn = document.getElementById('prevPhotoBtn');
+        const nextPhotoBtn = document.getElementById('nextPhotoBtn');
+
+        function updateCarousel() {
+            if (photoList.length === 0) return;
+            carouselImage.src = photoList[currentPhotoIndex];
+            
+            // Ocultar flechas si solo hay 1 foto
+            if (photoList.length <= 1) {
+                prevPhotoBtn.style.display = 'none';
+                nextPhotoBtn.style.display = 'none';
+                carouselDots.style.display = 'none';
+            } else {
+                prevPhotoBtn.style.display = 'flex';
+                nextPhotoBtn.style.display = 'flex';
+                carouselDots.style.display = 'flex';
+            }
+
+            // Render Dots
+            carouselDots.innerHTML = '';
+            photoList.forEach((_, idx) => {
+                const dot = document.createElement('button');
+                dot.className = `w-2 h-2 rounded-full transition-all duration-300 ${idx === currentPhotoIndex ? 'bg-amber-700 w-4' : 'bg-amber-900/30'}`;
+                dot.addEventListener('click', () => {
+                    currentPhotoIndex = idx;
+                    updateCarousel();
+                });
+                carouselDots.appendChild(dot);
+            });
+        }
+
+        prevPhotoBtn.addEventListener('click', () => {
+            currentPhotoIndex = (currentPhotoIndex - 1 + photoList.length) % photoList.length;
+            updateCarousel();
+        });
+
+        nextPhotoBtn.addEventListener('click', () => {
+            currentPhotoIndex = (currentPhotoIndex + 1) % photoList.length;
+            updateCarousel();
+        });
+
+        // Inicializar el carrusel
+        updateCarousel();
+
         // Envelope Unfold & Fold Actions
         const waxSealBtn = document.getElementById('waxSealBtn');
         const ribbonV = document.getElementById('ribbonV');
@@ -387,7 +418,6 @@
         const flapLeft = document.getElementById('flapLeft');
         const flapRight = document.getElementById('flapRight');
         const letterPaper = document.getElementById('letterPaper');
-        const envelope = document.getElementById('envelope');
         const instructionText = document.getElementById('instructionText');
         const closeLetterBtn = document.getElementById('closeLetterBtn');
         const bgFocusOverlay = document.getElementById('bgFocusOverlay');
@@ -451,53 +481,6 @@
 
                 instructionText.style.opacity = '1';
             }, 1100);
-        });
-
-        // Photo Upload
-        const imageUpload = document.getElementById('imageUpload');
-        const letterImage = document.getElementById('letterImage');
-
-        imageUpload.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    letterImage.src = event.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
-        // Edit Modal Logic
-        const editBtn = document.getElementById('editBtn');
-        const editModal = document.getElementById('editModal');
-        const cancelEditBtn = document.getElementById('cancelEditBtn');
-        const saveEditBtn = document.getElementById('saveEditBtn');
-
-        const letterTitle = document.getElementById('letterTitle');
-        const letterBody = document.getElementById('letterBody');
-        const letterSignature = document.getElementById('letterSignature');
-
-        const inputTitle = document.getElementById('inputTitle');
-        const inputBody = document.getElementById('inputBody');
-        const inputSignature = document.getElementById('inputSignature');
-
-        editBtn.addEventListener('click', () => {
-            inputTitle.value = letterTitle.textContent.trim();
-            inputBody.value = letterBody.textContent.trim().replace(/^"|"$/g, '');
-            inputSignature.value = letterSignature.textContent.trim();
-            editModal.classList.remove('hidden');
-        });
-
-        cancelEditBtn.addEventListener('click', () => {
-            editModal.classList.add('hidden');
-        });
-
-        saveEditBtn.addEventListener('click', () => {
-            letterTitle.textContent = inputTitle.value.trim() || 'Enviado desde el Cielo';
-            letterBody.textContent = `"${inputBody.value.trim()}"`;
-            letterSignature.textContent = inputSignature.value.trim() || 'Con todo mi amor desde el cielo';
-            editModal.classList.add('hidden');
         });
     </script>
 </body>
