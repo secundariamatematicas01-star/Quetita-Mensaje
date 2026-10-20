@@ -9,10 +9,10 @@
     <!-- Tailwind CSS desde CDN Seguro -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- FontAwesome Icons CDN (Cross-Origin Habilitado) -->
+    <!-- FontAwesome Icons CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     
-    <!-- Google Fonts CDN (Cross-Origin Habilitado) -->
+    <!-- Google Fonts CDN -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;600&family=Great+Vibes&display=swap" rel="stylesheet">
@@ -209,7 +209,7 @@
                         </h2>
                     </div>
 
-                    <!-- Photo Carousel Holder (Ampliado para ver fotos completas) -->
+                    <!-- Photo Carousel Holder -->
                     <div class="flex flex-col items-center my-3 relative">
                         <div class="p-2 bg-white rounded-xl shadow-xl border border-amber-200/60 relative group w-48 h-48 sm:w-60 sm:h-60 md:w-64 md:h-64 overflow-hidden flex items-center justify-center">
                             <img id="carouselImage" src="" alt="Recuerdo Celestial" class="w-full h-full object-contain rounded-lg transition-all duration-500 bg-slate-50/50">
@@ -287,7 +287,7 @@
         <i class="fa-solid fa-dove text-amber-300/70"></i> Mensaje desde el Cielo
     </footer>
 
-    <!-- Universal Low-Data Audio Integration -->
+    <!-- Universal Audio -->
     <audio id="bgMusic" src="cancion.mp3" preload="metadata" loop playsinline webkit-playsinline type="audio/mpeg"></audio>
 
     <!-- JavaScript Engine -->
@@ -369,13 +369,15 @@
             }
         });
 
-        // Fixed Photo Array (Nombres de tus fotos subidas a GitHub)
+        // Fixed Photo Array (Nombres de tus fotos)
         let photoList = [
             "foto1.jpeg",
             "foto2.jpeg",
             "foto3.jpeg"
         ];
         let currentPhotoIndex = 0;
+        let autoScrollTimer = null;
+        const AUTO_SWAP_INTERVAL = 3500; // Cambia cada 3.5 segundos (3500 milisegundos)
 
         const carouselImage = document.getElementById('carouselImage');
         const carouselDots = document.getElementById('carouselDots');
@@ -404,22 +406,56 @@
                 dot.addEventListener('click', () => {
                     currentPhotoIndex = idx;
                     updateCarousel();
+                    resetAutoScroll(); // Reinicia el tiempo si el usuario interactúa
                 });
                 carouselDots.appendChild(dot);
             });
         }
 
+        function nextPhoto() {
+            if (photoList.length > 1) {
+                currentPhotoIndex = (currentPhotoIndex + 1) % photoList.length;
+                updateCarousel();
+            }
+        }
+
+        function prevPhoto() {
+            if (photoList.length > 1) {
+                currentPhotoIndex = (currentPhotoIndex - 1 + photoList.length) % photoList.length;
+                updateCarousel();
+            }
+        }
+
+        function startAutoScroll() {
+            if (!autoScrollTimer && photoList.length > 1) {
+                autoScrollTimer = setInterval(nextPhoto, AUTO_SWAP_INTERVAL);
+            }
+        }
+
+        function stopAutoScroll() {
+            if (autoScrollTimer) {
+                clearInterval(autoScrollTimer);
+                autoScrollTimer = null;
+            }
+        }
+
+        function resetAutoScroll() {
+            stopAutoScroll();
+            startAutoScroll();
+        }
+
         prevPhotoBtn.addEventListener('click', () => {
-            currentPhotoIndex = (currentPhotoIndex - 1 + photoList.length) % photoList.length;
-            updateCarousel();
+            prevPhoto();
+            resetAutoScroll();
         });
 
         nextPhotoBtn.addEventListener('click', () => {
-            currentPhotoIndex = (currentPhotoIndex + 1) % photoList.length;
-            updateCarousel();
+            nextPhoto();
+            resetAutoScroll();
         });
 
         updateCarousel();
+        startAutoScroll(); // Iniciar cambio automático
 
         // 3D Envelope Animation Cycle
         const waxSealBtn = document.getElementById('waxSealBtn');
