@@ -199,8 +199,37 @@
                     <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fef08a_1px,transparent_1px)] [background-size:20px_20px]"></div>
                 </div>
 
-                <!-- Letter Card -->
-                <div id="letterPaper" class="letter-paper absolute inset-2.5 sm:inset-4 glass-card rounded-xl p-4 sm:p-7 text-slate-800 z-15 opacity-0 transform scale-95 pointer-events-none flex flex-col justify-between border border-amber-200/70 custom-scrollbar overflow-y-auto max-h-[85vh]">
+                <!-- Ribbons -->
+                <div id="ribbonV" class="ribbon-v absolute inset-y-0 w-6 sm:w-8 left-1/2 transform -translate-x-1/2 z-35 pointer-events-none"></div>
+                <div id="ribbonH" class="ribbon-h absolute inset-x-0 h-6 sm:h-8 top-1/2 transform -translate-y-1/2 z-35 pointer-events-none"></div>
+
+                <!-- Flaps -->
+                <div id="flapTop" class="flap-top absolute top-0 inset-x-0 h-1/2 bg-slate-900/90 rounded-t-2xl border-b border-amber-300/20">
+                    <div class="w-full h-full bg-gradient-to-b from-slate-900 to-slate-950 clip-top"></div>
+                </div>
+
+                <div id="flapBottom" class="flap-bottom absolute bottom-0 inset-x-0 h-1/2 bg-slate-900/90 rounded-b-2xl border-t border-amber-300/20">
+                    <div class="w-full h-full bg-gradient-to-t from-slate-900 to-slate-950 clip-bottom"></div>
+                </div>
+
+                <div id="flapLeft" class="flap-left absolute left-0 inset-y-0 w-1/2 bg-slate-900/90 rounded-l-2xl border-r border-amber-300/20">
+                    <div class="w-full h-full bg-gradient-to-r from-slate-900 to-slate-950 clip-left"></div>
+                </div>
+
+                <div id="flapRight" class="flap-right absolute right-0 inset-y-0 w-1/2 bg-slate-900/90 rounded-r-2xl border-l border-amber-300/20">
+                    <div class="w-full h-full bg-gradient-to-l from-slate-900 to-slate-950 clip-right"></div>
+                </div>
+
+                <!-- Modern Wax Seal Button (Z-index superior absoluto para asegurar click directo) -->
+                <button id="waxSealBtn" aria-label="Abrir sobre" class="wax-seal-modern absolute z-50 w-14 h-14 sm:w-18 sm:h-18 rounded-full flex flex-col items-center justify-center cursor-pointer transform active:scale-90">
+                    <div id="sealIconGroup" class="text-amber-950 text-lg sm:text-2xl flex flex-col items-center pointer-events-none">
+                        <i class="fa-solid fa-cross"></i>
+                        <span class="font-sans-modern text-[7px] sm:text-[8px] font-bold tracking-widest text-amber-950/90 mt-0.5 uppercase">Abrir</span>
+                    </div>
+                </button>
+
+                <!-- Letter Card (Oculta al inicio por debajo de los solapas y solapa con z-index menor) -->
+                <div id="letterPaper" class="letter-paper absolute inset-2.5 sm:inset-4 glass-card rounded-xl p-4 sm:p-7 text-slate-800 z-10 opacity-0 transform scale-95 pointer-events-none flex flex-col justify-between border border-amber-200/70 custom-scrollbar overflow-y-auto max-h-[85vh]">
                     
                     <!-- Title Header -->
                     <div class="text-center mb-2 pb-2 border-b border-amber-900/10">
@@ -267,35 +296,6 @@
                         </button>
                     </div>
                 </div>
-
-                <!-- Ribbons -->
-                <div id="ribbonV" class="ribbon-v absolute inset-y-0 w-6 sm:w-8 left-1/2 transform -translate-x-1/2 z-35 pointer-events-none"></div>
-                <div id="ribbonH" class="ribbon-h absolute inset-x-0 h-6 sm:h-8 top-1/2 transform -translate-y-1/2 z-35 pointer-events-none"></div>
-
-                <!-- Flaps -->
-                <div id="flapTop" class="flap-top absolute top-0 inset-x-0 h-1/2 bg-slate-900/90 rounded-t-2xl border-b border-amber-300/20">
-                    <div class="w-full h-full bg-gradient-to-b from-slate-900 to-slate-950 clip-top"></div>
-                </div>
-
-                <div id="flapBottom" class="flap-bottom absolute bottom-0 inset-x-0 h-1/2 bg-slate-900/90 rounded-b-2xl border-t border-amber-300/20">
-                    <div class="w-full h-full bg-gradient-to-t from-slate-900 to-slate-950 clip-bottom"></div>
-                </div>
-
-                <div id="flapLeft" class="flap-left absolute left-0 inset-y-0 w-1/2 bg-slate-900/90 rounded-l-2xl border-r border-amber-300/20">
-                    <div class="w-full h-full bg-gradient-to-r from-slate-900 to-slate-950 clip-left"></div>
-                </div>
-
-                <div id="flapRight" class="flap-right absolute right-0 inset-y-0 w-1/2 bg-slate-900/90 rounded-r-2xl border-l border-amber-300/20">
-                    <div class="w-full h-full bg-gradient-to-l from-slate-900 to-slate-950 clip-right"></div>
-                </div>
-
-                <!-- Wax Seal Button -->
-                <button id="waxSealBtn" aria-label="Abrir sobre" class="wax-seal-modern absolute z-40 w-14 h-14 sm:w-18 sm:h-18 rounded-full flex flex-col items-center justify-center cursor-pointer transform active:scale-90">
-                    <div id="sealIconGroup" class="text-amber-950 text-lg sm:text-2xl flex flex-col items-center pointer-events-none">
-                        <i class="fa-solid fa-cross"></i>
-                        <span class="font-sans-modern text-[7px] sm:text-[8px] font-bold tracking-widest text-amber-950/90 mt-0.5 uppercase">Abrir</span>
-                    </div>
-                </button>
 
             </div>
         </div>
@@ -434,7 +434,6 @@
             
             const utterance = new SpeechSynthesisUtterance(textToRead);
 
-            // Tono y velocidad optimizados para naturalidad
             utterance.pitch = 0.92;
             utterance.rate = 0.88;
             utterance.volume = 1.0;
@@ -568,4 +567,77 @@
         const waxSealBtn = document.getElementById('waxSealBtn');
         const ribbonV = document.getElementById('ribbonV');
         const ribbonH = document.getElementById('ribbonH');
-        const flapTop = document.getElementById('
+        const flapTop = document.getElementById('flapTop');
+        const flapBottom = document.getElementById('flapBottom');
+        const flapLeft = document.getElementById('flapLeft');
+        const flapRight = document.getElementById('flapRight');
+        const letterPaper = document.getElementById('letterPaper');
+        const instructionText = document.getElementById('instructionText');
+        const closeLetterBtn = document.getElementById('closeLetterBtn');
+        const bgFocusOverlay = document.getElementById('bgFocusOverlay');
+
+        let isEnvelopeOpen = false;
+
+        waxSealBtn.addEventListener('click', () => {
+            if (isEnvelopeOpen) return;
+            isEnvelopeOpen = true;
+
+            waxSealBtn.style.transform = 'scale(1.4) rotate(15deg)';
+            waxSealBtn.style.opacity = '0';
+            waxSealBtn.style.pointerEvents = 'none';
+
+            ribbonV.style.opacity = '0';
+            ribbonH.style.opacity = '0';
+            instructionText.style.opacity = '0';
+
+            setTimeout(() => { flapTop.classList.add('open'); }, 200);
+            setTimeout(() => { 
+                flapLeft.classList.add('open'); 
+                flapRight.classList.add('open'); 
+            }, 450);
+            setTimeout(() => { flapBottom.classList.add('open'); }, 650);
+
+            setTimeout(() => {
+                bgFocusOverlay.classList.remove('opacity-0', 'pointer-events-none');
+                bgFocusOverlay.classList.add('opacity-100');
+
+                letterPaper.classList.remove('opacity-0', 'pointer-events-none', 'scale-95');
+                letterPaper.classList.add('opacity-100', 'pointer-events-auto', 'scale-100', 'z-40');
+            }, 900);
+        });
+
+        closeLetterBtn.addEventListener('click', () => {
+            if (!isEnvelopeOpen) return;
+            isEnvelopeOpen = false;
+
+            if (synth && synth.speaking) {
+                synth.cancel();
+                speechIcon.className = 'fa-solid fa-volume-high text-amber-800 text-base';
+            }
+
+            bgFocusOverlay.classList.remove('opacity-100');
+            bgFocusOverlay.classList.add('opacity-0', 'pointer-events-none');
+
+            letterPaper.classList.remove('opacity-100', 'pointer-events-auto', 'scale-100', 'z-40');
+            letterPaper.classList.add('opacity-0', 'pointer-events-none', 'scale-95');
+
+            setTimeout(() => { flapBottom.classList.remove('open'); }, 250);
+            setTimeout(() => { 
+                flapLeft.classList.remove('open'); 
+                flapRight.classList.remove('open'); 
+            }, 450);
+            setTimeout(() => { flapTop.classList.remove('open'); }, 650);
+
+            setTimeout(() => {
+                waxSealBtn.style.transform = 'scale(1) rotate(0deg)';
+                waxSealBtn.style.opacity = '1';
+                waxSealBtn.style.pointerEvents = 'auto';
+
+                ribbonV.style.opacity = '1';
+                ribbonH.style.opacity = '1';
+                instructionText.style.opacity = '1';
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
