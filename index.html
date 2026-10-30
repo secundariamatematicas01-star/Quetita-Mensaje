@@ -141,12 +141,30 @@
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: rgba(217, 119, 6, 0.05); }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(217, 119, 6, 0.3); border-radius: 10px; }
+
+        /* Animación de Palomas Flotantes */
+        @keyframes floatDove {
+            0% { transform: translate(-50px, 100vh) scale(0.8) rotate(-10deg); opacity: 0; }
+            20% { opacity: 0.8; }
+            80% { opacity: 0.8; }
+            100% { transform: translate(calc(100vw + 50px), -10vh) scale(1.2) rotate(10deg); opacity: 0; }
+        }
+        .floating-dove {
+            position: absolute;
+            animation: floatDove linear infinite;
+            pointer-events: none;
+            color: rgba(254, 240, 138, 0.75);
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.4));
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-slate-950 via-sky-950 to-slate-900 min-h-full text-amber-100 flex flex-col justify-between overflow-x-hidden font-sans-modern select-none relative">
 
-    <!-- Ambient Canvas Engine (Iconos de Palomas, Mariposas, Nubes, Viento y Papelitos) -->
-    <canvas id="sparksCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-90"></canvas>
+    <!-- Contenedor de Palomas Flotantes (FontAwesome ícono exacto) -->
+    <div id="dovesContainer" class="fixed inset-0 pointer-events-none overflow-hidden z-0"></div>
+
+    <!-- Ambient Canvas Engine (Lluvia continua de papelitos blancos) -->
+    <canvas id="sparksCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-80"></canvas>
 
     <!-- Overlay Backdrop -->
     <div id="bgFocusOverlay" class="fixed inset-0 bg-slate-950/75 backdrop-blur-md pointer-events-none opacity-0 transition-opacity duration-1000 z-10"></div>
@@ -278,7 +296,7 @@
                             Hannita y Arlen, les toca la gran responsabilidad de ser un ejemplo para sus bendiciones. Guíenlas por el camino e instrúyanlas siempre en los caminos de Dios.<br><br>
                             Mi negrito, te toca la parte más complicada de tu vida, porque sé cómo te has sentido durante estos últimos años. Sé que yo era tu fortaleza, esa persona con quien llegabas a platicar y con quien disfrutabas de varias tardes a mi lado. Pero ahora tienes una responsabilidad que Dios dejó en tus manos. Sé que siempre miras al cielo buscando una señal que te dé una respuesta, pero tú sabes más que nadie dónde me encuentro.<br><br>
                             Familia, quiero bendecir a todos los nuevos integrantes, parejas, esposos y bendiciones. Ámense los unos a los otros y vivan la vida por el camino de Dios.<br><br>
-                            Familia, sé que es poco el tiempo que tengo, pero ya me tengo que despedir. Не olviden lo que les mencioné. Los amo a todos y a todas. No estén tristes en este día; hay que divertirnos como en aquellas Navidades y reuniones que teníamos. Celebremos las bendiciones que Dios nos ha dado a toda esta familia."
+                            Familia, sé que es poco el tiempo que tengo, pero ya me tengo que despedir. No olviden lo que les mencioné. Los amo a todos y a todas. No estén tristes en este día; hay que divertirnos como en aquellas Navidades y reuniones que teníamos. Celebremos las bendiciones que Dios nos ha dado a toda esta familia."
                         </p>
                     </div>
 
@@ -309,8 +327,31 @@
     <!-- Universal Audio -->
     <audio id="bgMusic" src="cancion.mp3" preload="metadata" loop playsinline webkit-playsinline type="audio/mpeg"></audio>
 
-    <!-- JavaScript Engine (Iconos celestiales de palomas, mariposas, nubes y papelitos) -->
+    <!-- JavaScript Engine -->
     <script>
+        // --- Generador de Palomas Flotantes idénticas (FontAwesome) ---
+        const dovesContainer = document.getElementById('dovesContainer');
+        const doveCount = window.innerWidth < 640 ? 4 : 8;
+
+        for (let i = 0; i < doveCount; i++) {
+            const dove = document.createElement('i');
+            dove.className = 'fa-solid fa-dove floating-dove';
+            
+            // Posiciones y tiempos aleatorios para que vuelen de forma natural y escalonada
+            const randomTop = Math.random() * 80 + 10; // Altura aleatoria
+            const randomDuration = Math.random() * 12 + 14; // Velocidad de vuelo (14s a 26s)
+            const randomDelay = Math.random() * 15; // Retraso inicial
+            const randomSize = Math.random() * 12 + 16; // Tamaño de la paloma (16px a 28px)
+
+            dove.style.top = `${randomTop}vh`;
+            dove.style.animationDuration = `${randomDuration}s`;
+            dove.style.animationDelay = `${randomDelay}s`;
+            dove.style.fontSize = `${randomSize}px`;
+
+            dovesContainer.appendChild(dove);
+        }
+
+        // Performance Canvas Engine - Lluvia continua de papelitos blancos
         const canvas = document.getElementById('sparksCanvas');
         const ctx = canvas.getContext('2d');
 
@@ -321,24 +362,27 @@
         resizeCanvas();
         window.addEventListener('resize', resizeCanvas, { passive: true });
 
-        // --- 1. Lluvia de Papelitos Blancos / Hojas ---
-        const papers = [];
-        class Paper {
+        const paperParticles = [];
+        const paperColors = ['rgba(255, 255, 255, 0.95)', 'rgba(254, 240, 138, 0.75)', 'rgba(241, 245, 249, 0.85)'];
+
+        class PaperParticle {
             constructor() { this.reset(true); }
             reset(initial = false) {
                 this.x = Math.random() * canvas.width;
                 this.y = initial ? Math.random() * canvas.height : -20;
-                this.size = Math.random() * 8 + 6;
-                this.speedY = Math.random() * 0.7 + 0.3;
+                this.w = Math.random() * 6 + 4;
+                this.h = Math.random() * 8 + 6;
+                this.speedY = Math.random() * 0.8 + 0.4;
                 this.speedX = Math.random() * 0.4 - 0.2;
                 this.angle = Math.random() * Math.PI * 2;
-                this.spin = Math.random() * 0.03 - 0.015;
+                this.angularSpeed = Math.random() * 0.03 - 0.015;
+                this.color = paperColors[Math.floor(Math.random() * paperColors.length)];
                 this.opacity = Math.random() * 0.7 + 0.3;
             }
             update() {
                 this.y += this.speedY;
-                this.x += Math.sin(this.angle) * 0.6 + this.speedX;
-                this.angle += this.spin;
+                this.x += Math.sin(this.angle) * 0.5 + this.speedX;
+                this.angle += this.angularSpeed;
                 if (this.y > canvas.height + 20 || this.x < -20 || this.x > canvas.width + 20) {
                     this.reset(false);
                 }
@@ -348,142 +392,21 @@
                 ctx.translate(this.x, this.y);
                 ctx.rotate(this.angle);
                 ctx.globalAlpha = this.opacity;
-                ctx.fillStyle = '#ffffff';
-                ctx.fillRect(-this.size / 2, -this.size / 4, this.size, this.size * 0.6);
+                ctx.fillStyle = this.color;
+                ctx.fillRect(-this.w / 2, -this.h / 2, this.w, this.h);
                 ctx.restore();
             }
         }
 
-        // --- 2. Nubes / Clobires Flotantes (☁️) ---
-        const clouds = [];
-        class CloudIcon {
-            constructor() { this.reset(true); }
-            reset(initial = false) {
-                this.x = initial ? Math.random() * canvas.width : -100;
-                this.y = Math.random() * (canvas.height * 0.6);
-                this.size = Math.random() * 24 + 32; // Tamaño del emoji de nube
-                this.speedX = Math.random() * 0.12 + 0.05;
-                this.opacity = Math.random() * 0.3 + 0.15;
-            }
-            update() {
-                this.x += this.speedX;
-                if (this.x > canvas.width + 100) {
-                    this.reset(false);
-                    this.x = -100;
-                }
-            }
-            draw() {
-                ctx.save();
-                ctx.globalAlpha = this.opacity;
-                ctx.font = `${this.size}px sans-serif`;
-                ctx.fillText('☁️', this.x, this.y);
-                ctx.restore();
-            }
-        }
+        const particleCount = window.innerWidth < 640 ? 30 : 55;
+        for (let i = 0; i < particleCount; i++) { paperParticles.push(new PaperParticle()); }
 
-        // --- 3. Palomas Blancas (🕊️) ---
-        const doves = [];
-        class DoveIcon {
-            constructor() { this.reset(true); }
-            reset(initial = false) {
-                this.x = initial ? Math.random() * canvas.width : -60;
-                this.y = Math.random() * (canvas.height * 0.5);
-                this.size = Math.random() * 8 + 24; // Tamaño de la paloma
-                this.speedX = Math.random() * 0.35 + 0.25;
-                this.opacity = Math.random() * 0.5 + 0.3;
-            }
-            update() {
-                this.x += this.speedX;
-                this.y += Math.sin(this.x * 0.01) * 0.3; // Movimiento ondulante de vuelo
-                if (this.x > canvas.width + 60) {
-                    this.reset(false);
-                    this.x = -60;
-                }
-            }
-            draw() {
-                ctx.save();
-                ctx.globalAlpha = this.opacity;
-                ctx.font = `${this.size}px sans-serif`;
-                ctx.fillText('🕊️', this.x, this.y);
-                ctx.restore();
-            }
-        }
-
-        // --- 4. Mariposas (🦋) ---
-        const butterflies = [];
-        class ButterflyIcon {
-            constructor() { this.reset(true); }
-            reset(initial = false) {
-                this.x = Math.random() * canvas.width;
-                this.y = initial ? Math.random() * canvas.height : canvas.height + 30;
-                this.size = Math.random() * 6 + 18; // Tamaño de la mariposa
-                this.speedY = -(Math.random() * 0.3 + 0.2);
-                this.angle = Math.random() * Math.PI * 2;
-                this.opacity = Math.random() * 0.5 + 0.4;
-            }
-            update() {
-                this.y += this.speedY;
-                this.x += Math.sin(this.y * 0.025) * 1.2;
-                if (this.y < -30) {
-                    this.y = canvas.height + 30;
-                    this.x = Math.random() * canvas.width;
-                }
-            }
-            draw() {
-                ctx.save();
-                ctx.globalAlpha = this.opacity;
-                ctx.font = `${this.size}px sans-serif`;
-                ctx.fillText('🦋', this.x, this.y);
-                ctx.restore();
-            }
-        }
-
-        // --- 5. Hojas / Viento con movimiento (🍃) ---
-        const winds = [];
-        class WindLeaf {
-            constructor() { this.reset(true); }
-            reset(initial = false) {
-                this.x = initial ? Math.random() * canvas.width : -50;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 6 + 16;
-                this.speedX = Math.random() * 0.6 + 0.4;
-                this.speedY = Math.random() * 0.3 - 0.15;
-                this.opacity = Math.random() * 0.4 + 0.2;
-            }
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                if (this.x > canvas.width + 50) {
-                    this.reset(false);
-                    this.x = -50;
-                }
-            }
-            draw() {
-                ctx.save();
-                ctx.globalAlpha = this.opacity;
-                ctx.font = `${this.size}px sans-serif`;
-                ctx.fillText('🍃', this.x, this.y);
-                ctx.restore();
-            }
-        }
-
-        // Instanciar todos los elementos gráficos
-        for (let i = 0; i < (window.innerWidth < 640 ? 25 : 45); i++) papers.push(new Paper());
-        for (let i = 0; i < 4; i++) clouds.push(new CloudIcon());
-        for (let i = 0; i < 3; i++) doves.push(new DoveIcon());
-        for (let i = 0; i < 6; i++) butterflies.push(new ButterflyIcon());
-        for (let i = 0; i < 5; i++) winds.push(new WindLeaf());
-
-        function animateAllIcons() {
+        function animatePaperRain() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            clouds.forEach(c => { c.update(); c.draw(); });
-            winds.forEach(w => { w.update(); w.draw(); });
-            papers.forEach(p => { p.update(); p.draw(); });
-            butterflies.forEach(b => { b.update(); b.draw(); });
-            doves.forEach(d => { d.update(); d.draw(); });
-            requestAnimationFrame(animateAllIcons);
+            paperParticles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animatePaperRain);
         }
-        animateAllIcons();
+        animatePaperRain();
 
         // Cross-Network Audio Controller
         const bgMusic = document.getElementById('bgMusic');
