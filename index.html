@@ -336,74 +336,86 @@
             return bestVoice || spanishVoices[0] || voices[0];
         }
 
+        let isSpeakingQueue = false;
+
         function playGrandmaVoice() {
             if (!synth) {
                 alert('Tu navegador no soporta lectura de voz.');
                 return;
             }
 
-            if (synth.speaking) {
+            if (synth.speaking || isSpeakingQueue) {
                 synth.cancel();
+                isSpeakingQueue = false;
                 speechIcon.className = 'fa-solid fa-volume-high text-amber-800 text-lg';
+                if (!bgMusic.paused) {
+                    bgMusic.volume = originalMusicVol;
+                }
                 return;
             }
 
-            // Forzar actualización inmediata de voces si están vacías en algunos navegadores móviles
             synth.getVoices();
 
             setTimeout(() => {
                 const paragraphs = letterBody.querySelectorAll('p');
-                let fullTextArray = [];
+                let textChunks = [];
                 paragraphs.forEach(p => {
-                    if (p.textContent.trim()) {
-                        fullTextArray.push(p.textContent.trim());
-                    }
+                    let text = p.textContent.trim();
+                    if (text) textChunks.push(text);
                 });
                 
                 const signatureText = letterSignature.textContent.trim();
                 if (signatureText) {
-                    fullTextArray.push(signatureText);
+                    textChunks.push(signatureText);
                 }
 
-                // Unir todo con puntos y pausas claras para evitar cortes de texto largo en móviles
-                const textToRead = fullTextArray.join('. ');
+                if (textChunks.length === 0) return;
 
-                const utterance = new SpeechSynthesisUtterance(textToRead);
-                utterance.lang = 'es-MX';
-                utterance.pitch = 0.95;
-                utterance.rate = 0.72;
-                utterance.volume = 1.0;
-
-                const selectedVoice = getBestFemaleSpanishVoice();
-                if (selectedVoice) {
-                    utterance.voice = selectedVoice;
-                }
+                isSpeakingQueue = true;
+                speechIcon.className = 'fa-solid fa-pause text-amber-900 text-lg animate-pulse';
 
                 let originalMusicVol = bgMusic.volume;
                 if (!bgMusic.paused) {
                     bgMusic.volume = 0.15;
                 }
 
-                utterance.onstart = () => {
-                    speechIcon.className = 'fa-solid fa-pause text-amber-900 text-lg animate-pulse';
-                };
+                let currentIndex = 0;
 
-                utterance.onend = () => {
-                    speechIcon.className = 'fa-solid fa-volume-high text-amber-800 text-lg';
-                    if (!bgMusic.paused) {
-                        bgMusic.volume = originalMusicVol;
+                function speakNextChunk() {
+                    if (!isSpeakingQueue || currentIndex >= textChunks.length) {
+                        isSpeakingQueue = false;
+                        speechIcon.className = 'fa-solid fa-volume-high text-amber-800 text-lg';
+                        if (!bgMusic.paused) {
+                            bgMusic.volume = originalMusicVol;
+                        }
+                        return;
                     }
-                };
 
-                utterance.onerror = (e) => {
-                    console.log('Error de síntesis de voz:', e);
-                    speechIcon.className = 'fa-solid fa-volume-high text-amber-800 text-lg';
-                    if (!bgMusic.paused) {
-                        bgMusic.volume = originalMusicVol;
+                    const utterance = new SpeechSynthesisUtterance(textChunks[currentIndex]);
+                    utterance.lang = 'es-MX';
+                    utterance.pitch = 0.95;
+                    utterance.rate = 0.72;
+                    utterance.volume = 1.0;
+
+                    const selectedVoice = getBestFemaleSpanishVoice();
+                    if (selectedVoice) {
+                        utterance.voice = selectedVoice;
                     }
-                };
 
-                synth.speak(utterance);
+                    utterance.onend = () => {
+                        currentIndex++;
+                        speakNextChunk();
+                    };
+
+                    utterance.onerror = () => {
+                        currentIndex++;
+                        speakNextChunk();
+                    };
+
+                    synth.speak(utterance);
+                }
+
+                speakNextChunk();
             }, 50);
         }
 
@@ -489,7 +501,11 @@
         closeLetterBtn.addEventListener('click', () => {
             if (!isEnvelopeOpen) return;
             isEnvelopeOpen = false;
-            if (synth && synth.speaking) { synth.cancel(); speechIcon.className = 'fa-solid fa-volume-high text-amber-800 text-lg'; }
+            if (synth && (synth.speaking || isSpeakingQueue)) { 
+                synth.cancel(); 
+                isSpeakingQueue = false;
+                speechIcon.className = 'fa-solid fa-volume-high text-amber-800 text-lg'; 
+            }
             bgFocusOverlay.classList.remove('opacity-100');
             bgFocusOverlay.classList.add('opacity-0', 'pointer-events-none');
             letterPaper.classList.remove('opacity-100', 'pointer-events-auto', 'scale-100', 'z-10');
