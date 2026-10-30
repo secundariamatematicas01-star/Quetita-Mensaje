@@ -258,7 +258,7 @@
 
                     <!-- Letter Body & Voice Reader Button -->
                     <div class="my-2 text-center px-1 relative flex flex-col items-center">
-                        <!-- Botón Circular Minimalista de Solo Icono de Voz -->
+                        <!-- Botón Circular Minimalista de Solo Icono de Voz (Lenta y Natural) -->
                         <button id="speechBtn" aria-label="Escuchar mensaje de voz" title="Escuchar carta" class="mb-3 w-10 h-10 bg-amber-900/15 hover:bg-amber-900/25 text-amber-950 border border-amber-800/30 rounded-full flex items-center justify-center transition shadow-sm active:scale-95 cursor-pointer">
                             <i id="speechIcon" class="fa-solid fa-volume-high text-amber-800 text-base"></i>
                         </button>
@@ -388,7 +388,7 @@
             }
         });
 
-        // --- SISTEMA DE VOZ FEMENINA ESTRICTO Y FLUIDO ---
+        // --- SISTEMA DE VOZ FEMENINA LENTA Y PAUSADA ---
         const speechBtn = document.getElementById('speechBtn');
         const speechIcon = document.getElementById('speechIcon');
         const letterBody = document.getElementById('letterBody');
@@ -398,15 +398,11 @@
 
         function getBestFemaleSpanishVoice() {
             const voices = synth.getVoices();
-            // Filtrar voces que sean en español
             const spanishVoices = voices.filter(v => v.lang.startsWith('es') || v.lang.startsWith('ES'));
             
-            // Palabras clave para identificar voces femeninas / avanzadas
             const femaleKeywords = ['female', 'mujer', 'zira', 'helena', 'laura', 'victoria', 'paulina', 'mónica', 'sabrina', 'lucía', 'carmen', 'soledad', 'siri', 'neural', 'natural', 'google', 'es-us', 'es-mx', 'es-es'];
-            // Palabras clave de voces masculinas comunes para EVITARLAS por completo
             const maleKeywords = ['pablo', 'jorge', 'carlos', 'diego', 'alejandro', 'raul', 'tomas', 'male', 'hombre'];
 
-            // 1. Buscar una voz en español que sea claramente femenina y no masculina
             let bestVoice = spanishVoices.find(v => {
                 const name = v.name.toLowerCase();
                 const isMale = maleKeywords.some(m => name.includes(m));
@@ -414,7 +410,6 @@
                 return isFemale && !isMale;
             });
 
-            // 2. Si no encuentra por palabras clave precisas, buscar cualquiera que no sea masculina
             if (!bestVoice) {
                 bestVoice = spanishVoices.find(v => {
                     const name = v.name.toLowerCase();
@@ -443,9 +438,9 @@
             
             const utterance = new SpeechSynthesisUtterance(textToRead);
 
-            // Ajuste de tono neutro-cálido y velocidad calmada y conversacional
-            utterance.pitch = 1.0; 
-            utterance.rate = 0.85; 
+            // Ajuste para que hable mucho más lenta y pausada
+            utterance.pitch = 0.85;  // Tono ligeramente más maduro y cálido
+            utterance.rate = 0.70;   // Velocidad lenta para que se escuche calmada y emotiva
             utterance.volume = 1.0;
 
             const selectedVoice = getBestFemaleSpanishVoice();
