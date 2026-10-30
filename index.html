@@ -145,8 +145,8 @@
 </head>
 <body class="bg-gradient-to-br from-slate-950 via-sky-950 to-slate-900 min-h-full text-amber-100 flex flex-col justify-between overflow-x-hidden font-sans-modern select-none relative">
 
-    <!-- Ambient Canvas Engine -->
-    <canvas id="sparksCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-80"></canvas>
+    <!-- Ambient Canvas Engine (Lluvia continua de papeles/confeti blanco) -->
+    <canvas id="sparksCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-90"></canvas>
 
     <!-- Overlay Backdrop -->
     <div id="bgFocusOverlay" class="fixed inset-0 bg-slate-950/75 backdrop-blur-md pointer-events-none opacity-0 transition-opacity duration-1000 z-10"></div>
@@ -311,7 +311,7 @@
 
     <!-- JavaScript Engine -->
     <script>
-        // Performance Canvas Engine
+        // Performance Canvas Engine - Lluvia continua de papeles blancos
         const canvas = document.getElementById('sparksCanvas');
         const ctx = canvas.getContext('2d');
 
@@ -322,50 +322,58 @@
         resizeCanvas();
         window.addEventListener('resize', resizeCanvas, { passive: true });
 
-        const sparks = [];
-        const sparkColors = ['rgba(254, 240, 138, 0.8)', 'rgba(255, 255, 255, 0.9)', 'rgba(186, 230, 253, 0.7)'];
+        const paperParticles = [];
+        const paperColors = [
+            'rgba(255, 255, 255, 0.95)',
+            'rgba(254, 240, 138, 0.75)',
+            'rgba(241, 245, 249, 0.85)'
+        ];
 
-        class Spark {
-            constructor() { this.reset(); }
-            reset() {
+        class PaperParticle {
+            constructor() { this.reset(true); }
+            reset(initial = false) {
                 this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 1.8 + 0.5;
-                this.speedY = -(Math.random() * 0.35 + 0.1);
-                this.speedX = Math.random() * 0.3 - 0.15;
-                this.color = sparkColors[Math.floor(Math.random() * sparkColors.length)];
-                this.opacity = Math.random() * 0.6 + 0.2;
-                this.fade = Math.random() * 0.004 + 0.002;
+                this.y = initial ? Math.random() * canvas.height : -20;
+                this.w = Math.random() * 6 + 4; // Ancho del papel
+                this.h = Math.random() * 8 + 6; // Alto del papel
+                this.speedY = Math.random() * 0.8 + 0.5; // Caída constante hacia abajo
+                this.speedX = Math.random() * 0.4 - 0.2; // Brisa suave lateral
+                this.angle = Math.random() * Math.PI * 2;
+                this.angularSpeed = Math.random() * 0.03 - 0.015; // Giro continuo
+                this.color = paperColors[Math.floor(Math.random() * paperColors.length)];
+                this.opacity = Math.random() * 0.7 + 0.3;
             }
             update() {
                 this.y += this.speedY;
-                this.x += this.speedX;
-                this.opacity -= this.fade;
-                if (this.y < -10 || this.opacity <= 0) {
-                    this.reset();
-                    this.y = canvas.height + 10;
+                this.x += Math.sin(this.angle) * 0.5 + this.speedX;
+                this.angle += this.angularSpeed;
+
+                // Reiniciar al salir por abajo o los lados
+                if (this.y > canvas.height + 20 || this.x < -20 || this.x > canvas.width + 20) {
+                    this.reset(false);
                 }
             }
             draw() {
                 ctx.save();
-                ctx.globalAlpha = Math.max(0, this.opacity);
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.angle);
+                ctx.globalAlpha = this.opacity;
                 ctx.fillStyle = this.color;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
+                // Dibujar papelito rectangular flotando
+                ctx.fillRect(-this.w / 2, -this.h / 2, this.w, this.h);
                 ctx.restore();
             }
         }
 
-        const particleCount = window.innerWidth < 640 ? 25 : 40;
-        for (let i = 0; i < particleCount; i++) { sparks.push(new Spark()); }
+        const particleCount = window.innerWidth < 640 ? 40 : 70;
+        for (let i = 0; i < particleCount; i++) { paperParticles.push(new PaperParticle()); }
 
-        function animateSparks() {
+        function animatePaperRain() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            sparks.forEach(s => { s.update(); s.draw(); });
-            requestAnimationFrame(animateSparks);
+            paperParticles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animatePaperRain);
         }
-        animateSparks();
+        animatePaperRain();
 
         // Cross-Network Audio Controller
         const bgMusic = document.getElementById('bgMusic');
@@ -438,9 +446,8 @@
             
             const utterance = new SpeechSynthesisUtterance(textToRead);
 
-            // Ajuste para que hable mucho más lenta y pausada
-            utterance.pitch = 0.85;  // Tono ligeramente más maduro y cálido
-            utterance.rate = 0.70;   // Velocidad lenta para que se escuche calmada y emotiva
+            utterance.pitch = 0.85;  
+            utterance.rate = 0.70;   
             utterance.volume = 1.0;
 
             const selectedVoice = getBestFemaleSpanishVoice();
